@@ -9,19 +9,20 @@
     "test": "jest",
     "watch": "jest --watch *.js",
     "watchAll": "jest --watchAll",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "dev": "nodemon server/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JavedanCode/webpack-template.git"
+    "url": "git+https://github.com/JavedanCode/canvasLab.git"
   },
   "keywords": [],
   "author": "Soren Javedan",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JavedanCode/webpack-template/issues"
+    "url": "https://github.com/JavedanCode/canvasLab/issues"
   },
-  "homepage": "https://github.com/JavedanCode/webpack-template#readme",
+  "homepage": "https://github.com/JavedanCode/canvasLab",
   "devDependencies": {
     "@babel/preset-env": "^7.29.2",
     "clean-webpack-plugin": "^1.0.1",
@@ -31,10 +32,18 @@
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.6",
     "jest": "^30.3.0",
+    "nodemon": "^3.1.14",
     "style-loader": "^4.0.0",
     "webpack": "^5.105.4",
-    "webpack-cli": "^7.0.2",
+    "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.3",
     "webpack-merge": "^6.0.1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.2"
   }
 }
