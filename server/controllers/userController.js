@@ -57,6 +57,34 @@ const registerUser = async (req, res, next) => {
   }
 };
 
+const handleLogin = (req, res, next) => {
+  if (!req.body.email || !req.body.password) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+  try {
+    const { email, password } = req.body;
+    db.query(
+      `SELECT email,password_hash FROM users where email = ?`,
+      [email],
+      async (err, result) => {
+        if (err) {
+          return res.status(500).json({ error: err });
+        }
+        if (result.length === 0) {
+          return res.status(404).json({ message: "User Not Found" });
+        }
+        if (await bcrypt.compare(password, result[0].password_hash)) {
+          return res.status(200).json({ message: "Login Successful" });
+        } else {
+          return res.status(401).json({ message: "incorrect password" });
+        }
+      },
+    );
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 const deleteUser = (req, res, next) => {
   db.query(`DELETE FROM users WHERE id = ?`, [req.params.id], (err, result) => {
     if (err) {
@@ -70,4 +98,4 @@ const deleteUser = (req, res, next) => {
   });
 };
 
-module.exports = { getUsers, getUser, registerUser, deleteUser };
+module.exports = { getUsers, getUser, registerUser, deleteUser, handleLogin };

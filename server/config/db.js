@@ -12,7 +12,7 @@ const db = mysql.createConnection({
 //connect to the server
 db.connect((err) => {
   if (err) {
-    console.error("❌ DB connection failed:", err);
+    console.error("DB connection failed:", err);
   } else {
     console.log("Connected to MySQL");
   }
