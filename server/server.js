@@ -1,7 +1,8 @@
 const express = require("express"); //import express
 const cors = require("cors"); // import cors for allowing cross origin requests
 require("dotenv").config(); // import .env
-const router = require("./routes/users.js"); //import routes from users.js
+const userRoutes = require("./routes/users.js"); //import routes from users.js
+const paintingRoutes = require("./routes/paintings.js");
 
 const db = require("./config/db"); //import database
 
@@ -9,7 +10,8 @@ const app = express(); //create server
 
 app.use(cors()); //use cors middleware
 app.use(express.json()); //use json parser so backend can communicate with frontend
-app.use(router);
+app.use(userRoutes);
+app.use(paintingRoutes);
 
 //simple get request to test server is running
 app.get("/", (req, res) => {

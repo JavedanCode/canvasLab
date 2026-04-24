@@ -22,7 +22,7 @@ const getUser = (req, res, next) => {
       }
 
       if (result.length === 0)
-        return res.status(404).json({ message: "User Not Found" });
+        return res.status(404).json({ message: "User not found" });
       return res.status(200).json({ data: result[0] });
     },
   );
@@ -43,14 +43,14 @@ const registerUser = async (req, res, next) => {
       (err, result) => {
         if (err) {
           if (err.code === `ER_DUP_ENTRY`) {
-            return res.status(409).json({ error: "User Already Exists" });
+            return res.status(409).json({ error: "User already exists" });
           }
           return res.status(500).json({ error: err });
         }
         const userId = result.insertId;
         return res
           .status(201)
-          .json({ message: "User Created Successfully", userId: userId });
+          .json({ message: "User created successfully", userId: userId });
       },
     );
   } catch (error) {
@@ -65,21 +65,21 @@ const handleLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     db.query(
-      `SELECT email, password_hash FROM users where email = ?`,
+      `SELECT id, email, password_hash FROM users where email = ?`,
       [email],
       async (err, result) => {
         if (err) {
           return res.status(500).json({ error: err });
         }
         if (result.length === 0) {
-          return res.status(404).json({ message: "Invalid Credentials" });
+          return res.status(404).json({ message: "Invalid credentials" });
         }
         if (await bcrypt.compare(password, result[0].password_hash)) {
           const token = jwt.sign({ id: result[0].id }, process.env.JWT_SECRET, {
             expiresIn: "1h",
           });
           return res.status(200).json({
-            message: "Login Successful",
+            message: "Login successful",
             token: token,
             user: {
               id: result[0].id,
@@ -87,7 +87,7 @@ const handleLogin = async (req, res, next) => {
             },
           });
         } else {
-          return res.status(401).json({ message: "Invalid Credentials" });
+          return res.status(401).json({ message: "Invalid credentials" });
         }
       },
     );
@@ -102,10 +102,10 @@ const deleteUser = (req, res, next) => {
       return res.status(500).json({ error: err });
     }
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "User Not Found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({ message: "User Deleted Successfully" });
+    return res.status(200).json({ message: "User deleted successfully" });
   });
 };
 

@@ -9,22 +9,22 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 
-const router = express.Router();
+const userRoutes = express.Router();
 
 // GET
 
-router.get("/users", authMiddleware, getUsers);
+userRoutes.get("/users", authMiddleware, getUsers);
 
-router.get("/users/:id", authMiddleware, getUser);
+userRoutes.get("/users/:id", authMiddleware, getUser);
 
 // POST
 
-router.post("/auth/register", registerUser);
+userRoutes.post("/auth/register", registerUser);
 
-router.post("/auth/login", handleLogin);
+userRoutes.post("/auth/login", handleLogin);
 
 // DELETE
 
-router.delete("/users/:id", authMiddleware, deleteUser);
+userRoutes.delete("/users/:id", authMiddleware, deleteUser);
 
-module.exports = router;
+module.exports = userRoutes;
