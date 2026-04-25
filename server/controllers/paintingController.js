@@ -10,7 +10,7 @@ const getPaintings = (req, res, next) => {
     [req.user.id],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ err: err });
+        return res.status(500).json({ message: "Internal server error" });
       }
       if (result.length === 0) {
         return res.status(404).json({ message: "Painting doesn't exist" });
@@ -31,7 +31,7 @@ const getPainting = (req, res, next) => {
     [id, req.user.id],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ err: err });
+        return res.status(500).json({ message: "Internal server error" });
       }
       if (result.length === 0) {
         return res.status(404).json({ message: "Painting doesn't exist" });
@@ -58,7 +58,7 @@ const createCanvas = (req, res, next) => {
     [title, imageData, req.user.id],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ err: err });
+        return res.status(500).json({ message: "Internal server error" });
       }
       const paintingId = result.insertId;
       return res.status(201).json({
@@ -105,7 +105,7 @@ const updatePainting = (req, res, next) => {
 
   db.query(query, values, (err, result) => {
     if (err) {
-      return res.status(500).json({ err: err });
+      return res.status(500).json({ message: "Internal server error" });
     }
 
     if (result.affectedRows === 0) {
@@ -129,7 +129,7 @@ const deletePainting = (req, res, next) => {
     [id, req.user.id],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ err: err });
+        return res.status(500).json({ message: "Internal server error" });
       }
       if (result.affectedRows === 0) {
         return res.status(404).json({ message: "Painting not found" });

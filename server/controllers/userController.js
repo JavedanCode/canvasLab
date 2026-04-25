@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const getUsers = (req, res, next) => {
   db.query("SELECT * FROM users", (err, result) => {
     if (err) {
-      return res.status(500).json({ error: err });
+      return res.status(500).json({ message: "Internal server error" });
     }
 
     return res.status(200).json({ data: result });
@@ -18,7 +18,7 @@ const getUser = (req, res, next) => {
     [req.params.id],
     (err, result) => {
       if (err) {
-        return res.status(500).json({ error: err });
+        return res.status(500).json({ message: "Internal server error" });
       }
 
       if (result.length === 0)
@@ -45,7 +45,7 @@ const registerUser = async (req, res, next) => {
           if (err.code === `ER_DUP_ENTRY`) {
             return res.status(409).json({ error: "User already exists" });
           }
-          return res.status(500).json({ error: err });
+          return res.status(500).json({ message: "Internal server error" });
         }
         const userId = result.insertId;
         return res
@@ -69,7 +69,7 @@ const handleLogin = async (req, res, next) => {
       [email],
       async (err, result) => {
         if (err) {
-          return res.status(500).json({ error: err });
+          return res.status(500).json({ message: "Internal server error" });
         }
         if (result.length === 0) {
           return res.status(404).json({ message: "Invalid credentials" });
@@ -99,7 +99,7 @@ const handleLogin = async (req, res, next) => {
 const deleteUser = (req, res, next) => {
   db.query(`DELETE FROM users WHERE id = ?`, [req.params.id], (err, result) => {
     if (err) {
-      return res.status(500).json({ error: err });
+      return res.status(500).json({ message: "Internal server error" });
     }
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "User not found" });
