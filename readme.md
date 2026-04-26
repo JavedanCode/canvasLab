@@ -1,171 +1,179 @@
 # 🎨 CanvasLab
 
-A simple full-stack painting app where users can create, edit, save, and manage their own drawings.
+A full-stack web application that allows users to create, save, edit, and manage digital paintings directly in the browser.
+
+Built with a custom frontend canvas engine and a Node.js + PostgreSQL backend, CanvasLab supports authentication, persistent storage, and real-time interaction.
+
+---
+
+## 🚀 Live Demo
+
+🔗 https://canvaslab.onrender.com
+
+> ⚠️ Note: The backend is hosted on Render (free tier), so the first request may take a few seconds due to cold start.
 
 ---
 
 ## ✨ Features
 
-### 🔐 Authentication
-
-- User registration & login
-- JWT-based authentication
-- Protected routes
-
-### 🖌️ Canvas Editor
-
-- Draw with brush tool
-- Erase parts of the drawing
-- Adjustable brush size
-- Color picker
-- Clear canvas
-
-### 💾 Persistence
-
-- Save paintings to backend
-- Update existing paintings
-- Load saved paintings
-
-### 📁 Painting Management
-
-- Grid-based dashboard
-- Create new paintings
-- Delete paintings
-- Always-visible “+” card for new canvas
-
-### ⬇️ Export
-
-- Download drawings as PNG
-
-### ✏️ UX Features
-
-- Editable painting titles (double-click)
-- Smooth UI transitions
-- Glassmorphism-inspired design
-- Responsive layout
+- 🔐 User authentication (JWT-based)
+- 🎨 Interactive drawing canvas (brush, eraser, color picker, size control)
+- 💾 Save and update paintings
+- 🗂️ View all saved paintings per user
+- 🗑️ Delete paintings
+- 📥 Download artwork as image
+- ☁️ Persistent cloud storage (PostgreSQL)
 
 ---
 
-## 🧱 Tech Stack
+## 🧠 Tech Stack
 
 ### Frontend
 
-- Vanilla JavaScript (modular)
-- CSS (Flexbox + Grid)
-- Canvas API
+- Vanilla JavaScript
+- HTML5 Canvas API
+- CSS
 
 ### Backend
 
 - Node.js
-- Express
-- REST API
-
-### Other
-
+- Express.js
+- PostgreSQL (hosted on Render)
 - JWT Authentication
-- LocalStorage for session handling
+- bcrypt (password hashing)
+
+### Deployment
+
+- Backend: Render
+- Database: Render PostgreSQL
+- Frontend: (Add your hosting here if deployed)
 
 ---
 
-## 📂 Project Structure
+## 📁 Project Structure
 
 ```
-src/
+canvasLab/
 │
-├── ui/
-│   ├── login.js
-│   ├── registration.js
-│   ├── menu.js
-│   ├── canvas.js
-│   └── layout.js
+├── server/              # Backend (Node + Express)
+│   ├── controllers/
+│   ├── routes/
+│   ├── middleware/
+│   ├── config/
+│   └── server.js
 │
-├── util/
-│   ├── validation.js
-│   └── errorHelper.js
+├── src/                 # Frontend
+│   ├── ui/
+│   ├── util/
+│   └── index.js
 │
-├── img/
-│   ├── canvasLab.svg
-│   └── github-mark.svg
-│
-├── index.js
 ├── styles.css
-└── template.html
+└── README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+## ⚙️ Environment Variables
 
-### 1. Clone the repo
+### Backend (.env)
 
-```bash
+```
+DATABASE_URL=your_postgres_connection_string
+JWT_SECRET=your_secret_key
+```
+
+---
+
+## 🛠️ Installation (Local Development)
+
+### 1. Clone repo
+
+```
 git clone https://github.com/your-username/canvasLab.git
 cd canvasLab
 ```
 
-### 2. Install dependencies
+---
 
-```bash
+### 2. Install backend dependencies
+
+```
+cd server
 npm install
 ```
 
-### 3. Run development server
+---
 
-```bash
+### 3. Set up environment variables
+
+Create a `.env` file inside `/server`:
+
+```
+DATABASE_URL=your_local_or_remote_db
+JWT_SECRET=your_secret
+```
+
+---
+
+### 4. Run backend
+
+```
 npm run dev
 ```
 
-### 4. Start backend
+---
 
-Make sure your backend server is running on:
+### 5. Run frontend
 
-```
-http://localhost:3000
-```
+Open `index.html` (or your dev setup)
 
 ---
 
-## 🔗 API Endpoints
+## 🔐 Authentication Flow
 
-### Paintings
-
-| Method | Endpoint       | Description         |
-| ------ | -------------- | ------------------- |
-| GET    | /paintings     | Get all user images |
-| GET    | /paintings/:id | Get single painting |
-| POST   | /paintings     | Create new painting |
-| PUT    | /paintings/:id | Update painting     |
-| DELETE | /paintings/:id | Delete painting     |
+- User registers → password hashed with bcrypt
+- User logs in → receives JWT token
+- Token stored in localStorage
+- Protected routes use middleware to verify token
+- `req.user` is attached from decoded token
 
 ---
 
-## 🧠 How It Works
+## 💡 Key Learning Highlights
 
-- Canvas data is stored as **Base64 PNG**
-- On save:
-  - If no `id` → create new painting
-  - If `id` exists → update painting
-- Title changes are tracked and sent only when modified
-
----
-
-## 🎯 Future Improvements
-
-- Undo / redo system
-- Brush smoothing & pressure simulation
-- Layer support
-- Image thumbnails in dashboard
-- Drag & drop reordering
-- Mobile optimization
+- Migrated from MySQL to PostgreSQL (cloud-ready)
+- Implemented JWT-based authentication system
+- Built custom REST API with protected routes
+- Managed large payloads (canvas image data)
+- Deployed full backend with environment variables and cloud DB
 
 ---
 
-## 👤 Author
+## ⚠️ Known Limitations
 
-**Soren Javedan**
+- Images are stored as Base64 (not optimized for production scale)
+- No image compression yet
+- No pagination for paintings
+- Backend sleeps on inactivity (Render free tier)
 
 ---
 
-## 📜 License
+## 🚧 Future Improvements
 
-MIT License
+- Upload images to cloud storage (Cloudinary / S3)
+- Add autosave functionality
+- Add thumbnails for faster loading
+- Improve UI/UX
+- Add sharing / public gallery
+
+---
+
+## 🙌 Acknowledgements
+
+Built as a learning project to understand full-stack development, authentication, and deployment workflows.
+
+---
+
+## 📄 License
+
+This project is open-source and available under the MIT License.
