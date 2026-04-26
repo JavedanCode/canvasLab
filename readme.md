@@ -1,207 +1,171 @@
 # 🎨 CanvasLab
 
-CanvasLab is a web-based drawing application that allows users to create, edit, and save digital paintings directly in the browser.
-
-This project is being developed as part of a **System Analysis and Design** course and focuses on building a complete full-stack system with authentication, data persistence, and user-specific content.
+A simple full-stack painting app where users can create, edit, save, and manage their own drawings.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
 ### 🔐 Authentication
 
-- User registration with secure password hashing
-- Login system using JWT (JSON Web Tokens)
-- Protected routes using middleware
+- User registration & login
+- JWT-based authentication
+- Protected routes
 
-### 🖼️ Paintings System
+### 🖌️ Canvas Editor
 
+- Draw with brush tool
+- Erase parts of the drawing
+- Adjustable brush size
+- Color picker
+- Clear canvas
+
+### 💾 Persistence
+
+- Save paintings to backend
+- Update existing paintings
+- Load saved paintings
+
+### 📁 Painting Management
+
+- Grid-based dashboard
 - Create new paintings
-- Save drawings as Base64 image data
-- Retrieve all paintings for a user
-- View individual paintings
-- Update paintings (supports autosave)
 - Delete paintings
+- Always-visible “+” card for new canvas
 
-### 👤 User-Based Data Ownership
+### ⬇️ Export
 
-- Each painting is linked to a specific user
-- Users can only access and modify their own data
+- Download drawings as PNG
+
+### ✏️ UX Features
+
+- Editable painting titles (double-click)
+- Smooth UI transitions
+- Glassmorphism-inspired design
+- Responsive layout
 
 ---
 
-## 🧠 Technologies Used
+## 🧱 Tech Stack
+
+### Frontend
+
+- Vanilla JavaScript (modular)
+- CSS (Flexbox + Grid)
+- Canvas API
 
 ### Backend
 
 - Node.js
-- Express.js
-- MySQL
-- JWT (Authentication)
-- bcrypt (Password hashing)
+- Express
+- REST API
 
-### Development Tools
+### Other
 
-- Nodemon
-- Postman (API testing)
+- JWT Authentication
+- LocalStorage for session handling
 
 ---
 
-## 📁 Project Structure
+## 📂 Project Structure
 
-```plaintext
-server/
+```
+src/
 │
-├── config/
-│   └── db.js
+├── ui/
+│   ├── login.js
+│   ├── registration.js
+│   ├── menu.js
+│   ├── canvas.js
+│   └── layout.js
 │
-├── controllers/
-│   ├── userController.js
-│   └── paintingController.js
+├── util/
+│   ├── validation.js
+│   └── errorHelper.js
 │
-├── middleware/
-│   └── authMiddleware.js
+├── img/
+│   ├── canvasLab.svg
+│   └── github-mark.svg
 │
-├── routes/
-│   ├── users.js
-│   └── paintings.js
-│
-└── server.js
+├── index.js
+├── styles.css
+└── template.html
 ```
 
 ---
 
-## 🔑 API Overview
+## 🚀 Getting Started
 
-### Auth Routes
-
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-
-### Painting Routes (Protected)
-
-- `GET /api/paintings`
-- `GET /api/paintings/:id`
-- `POST /api/paintings`
-- `PUT /api/paintings/:id`
-- `DELETE /api/paintings/:id`
-
----
-
-## 🔐 Authentication Flow
-
-1. User logs in
-2. Server returns a JWT token
-3. Client stores token
-4. Token is sent with requests:
-
-   ```
-   Authorization: Bearer <token>
-   ```
-
-5. Middleware verifies token and attaches user info to request
-
----
-
-## 💾 Data Model
-
-### Users
-
-- id
-- username
-- email
-- password_hash
-
-### Paintings
-
-- id
-- user_id
-- title
-- image_data (Base64)
-- created_at (optional)
-- updated_at (optional)
-
----
-
-## ⚙️ Setup Instructions
-
-1. Clone the repository
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/your-username/canvasLab.git
 cd canvasLab
 ```
 
-2. Install dependencies
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-3. Create a `.env` file
-
-```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=drawing_app
-PORT=3000
-JWT_SECRET=your_secret_key
-```
-
-4. Start the server
+### 3. Run development server
 
 ```bash
 npm run dev
 ```
 
----
+### 4. Start backend
 
-## 🧪 Testing
+Make sure your backend server is running on:
 
-Use Postman to test endpoints:
-
-- Register → Login → Get token
-- Add token to headers:
-
-  ```
-  Authorization: Bearer <token>
-  ```
-
-- Test painting routes
+```
+http://localhost:3000
+```
 
 ---
 
-## 🚧 Current Status
+## 🔗 API Endpoints
 
-The backend is functional and supports authentication and painting CRUD operations.
+### Paintings
 
-Frontend integration (canvas drawing and UI) is currently in progress.
-
----
-
-## 🔮 Future Improvements
-
-- Frontend drawing canvas (HTML5 Canvas)
-- Autosave functionality optimization
-- Image compression instead of Base64
-- Better error handling and validation
-- UI/UX improvements
-- Deployment
+| Method | Endpoint       | Description         |
+| ------ | -------------- | ------------------- |
+| GET    | /paintings     | Get all user images |
+| GET    | /paintings/:id | Get single painting |
+| POST   | /paintings     | Create new painting |
+| PUT    | /paintings/:id | Update painting     |
+| DELETE | /paintings/:id | Delete painting     |
 
 ---
 
-## 📚 Purpose
+## 🧠 How It Works
 
-This project demonstrates:
-
-- REST API design
-- Authentication and authorization
-- Database relationships
-- Full-stack application architecture
+- Canvas data is stored as **Base64 PNG**
+- On save:
+  - If no `id` → create new painting
+  - If `id` exists → update painting
+- Title changes are tracked and sent only when modified
 
 ---
 
-## 👨‍💻 Author
+## 🎯 Future Improvements
 
-Soren Javedan
+- Undo / redo system
+- Brush smoothing & pressure simulation
+- Layer support
+- Image thumbnails in dashboard
+- Drag & drop reordering
+- Mobile optimization
+
+---
+
+## 👤 Author
+
+**Soren Javedan**
+
+---
+
+## 📜 License
+
+MIT License
