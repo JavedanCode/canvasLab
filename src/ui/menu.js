@@ -37,9 +37,10 @@ export default function menu() {
 
     addCard.addEventListener("click", () => {
       //Later we move user to their canvas.
-      paintings.push({
-        title: `Untitled ${paintings.length + 1}`,
-      });
+      //   paintings.push({
+      //     title: `Untitled ${paintings.length + 1}`,
+      //   });
+      navigateTo(canvas);
 
       renderCards();
     });

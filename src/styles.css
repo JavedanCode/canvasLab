@@ -13,6 +13,10 @@ body {
 main {
   flex: 1;
   display: flex;
+}
+
+.auth-main {
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -28,6 +32,8 @@ section {
   position: relative;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  align-self: center;
+  justify-self: center;
 }
 
 footer {
@@ -208,6 +214,8 @@ input:focus {
   flex: 1;
   padding: 40px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 /* FOOTER */
@@ -264,6 +272,97 @@ input:focus {
 
 .add-card {
   font-size: 40px;
+}
+
+.canvas-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+  flex: 1;
+}
+
+.canvas-topbar {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.canvas-title {
+  margin: 0;
+  color: white;
+  cursor: pointer;
+}
+
+.title-input {
+  font-size: 20px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-btn {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.tool-btn.active {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.color-picker {
+  width: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+/* Remove default styling (Chrome/Safari) */
+.color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 10px;
+}
+
+/* Firefox */
+.color-picker::-moz-color-swatch {
+  border: none;
+  border-radius: 10px;
+}
+
+.size-slider {
+  width: 120px;
+}
+
+.canvas-wrapper {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  max-height: 700px;
+}
+
+.paint-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .hidden {

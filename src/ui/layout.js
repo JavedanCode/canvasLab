@@ -18,6 +18,7 @@ export default () => {
 
   github_logo.id = "github-logo";
   logo.id = "logo";
+  main.classList.add("auth-main");
 
   footerText.textContent = "JavedanCode";
   github_link.href = "https://github.com/JavedanCode";
