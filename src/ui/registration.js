@@ -94,13 +94,16 @@ export default () => {
     if (!valid) return;
 
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://canvaslab.onrender.com/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, email, password }),
         },
-        body: JSON.stringify({ username, email, password }),
-      });
+      );
 
       const data = await response.json();
       if (!response.ok) {
