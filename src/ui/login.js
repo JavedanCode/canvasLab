@@ -4,6 +4,8 @@ import {
   validatePassword,
   validateUsername,
 } from "../util/validation.js";
+import { navigateTo } from "../index.js";
+import menu from "./menu.js";
 export default () => {
   const loginFormContainer = document.createElement("div");
   const loginHeading = document.createElement("h2");
@@ -82,7 +84,7 @@ export default () => {
     }
 
     if (valid) {
-      console.log("Login OK");
+      navigateTo(menu);
     }
   });
 

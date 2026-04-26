@@ -3,6 +3,17 @@ import createLayout from "./ui/layout.js";
 import registrationFormContainer from "./ui/registration.js";
 import loginFormContainer from "./ui/login.js";
 
+const root = document.body;
+
+function clearScreen() {
+  root.innerHTML = "";
+}
+
+export function navigateTo(view) {
+  clearScreen();
+  root.appendChild(view());
+}
+
 let isSignup = false;
 
 function toggleMode(loginForm, registrationForm, logo) {
