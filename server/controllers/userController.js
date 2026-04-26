@@ -14,7 +14,7 @@ const getUsers = (req, res, next) => {
 
 const getUser = (req, res, next) => {
   db.query(
-    `SELECT * FROM users WHERE id = ?`,
+    `SELECT * FROM users WHERE id = $1`,
     [req.params.id],
     (err, result) => {
       if (err) {
@@ -38,7 +38,7 @@ const registerUser = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     db.query(
       `INSERT INTO users(username, email, password_hash) 
-    VALUES(?,?,?)`,
+    VALUES($1,$2,$3)`,
       [username, email, hashedPassword],
       (err, result) => {
         if (err) {
@@ -64,50 +64,56 @@ const handleLogin = async (req, res, next) => {
   }
   try {
     const { email, password } = req.body;
-    db.query(
-      `SELECT id,username, email, password_hash FROM users where email = ?`,
+    const result = await db.query(
+      "SELECT id, username, email, password_hash FROM users WHERE email = $1",
       [email],
-      async (err, result) => {
-        if (err) {
-          return res.status(500).json({ message: "Internal server error" });
-        }
-        if (result.length === 0) {
-          return res.status(404).json({ message: "Invalid credentials" });
-        }
-        if (await bcrypt.compare(password, result[0].password_hash)) {
-          const token = jwt.sign({ id: result[0].id }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-          });
-          return res.status(200).json({
-            message: "Login successful",
-            token: token,
-            user: {
-              id: result[0].id,
-              email: result[0].email,
-              username: result[0].username,
-            },
-          });
-        } else {
-          return res.status(401).json({ message: "Invalid credentials" });
-        }
-      },
     );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Invalid credentials" });
+    }
+
+    const user = result.rows[0]; // ✅ THIS is the correct way
+
+    const match = await bcrypt.compare(password, user.password_hash);
+
+    if (!match) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
 
 const deleteUser = (req, res, next) => {
-  db.query(`DELETE FROM users WHERE id = ?`, [req.params.id], (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: "Internal server error" });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
+  db.query(
+    `DELETE FROM users WHERE id = $1`,
+    [req.params.id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({ message: "Internal server error" });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-    return res.status(200).json({ message: "User deleted successfully" });
-  });
+      return res.status(200).json({ message: "User deleted successfully" });
+    },
+  );
 };
 
 module.exports = { getUsers, getUser, registerUser, deleteUser, handleLogin };

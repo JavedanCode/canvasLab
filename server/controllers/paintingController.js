@@ -1,137 +1,122 @@
 const bcrypt = require("bcrypt");
-const db = require("../config/db"); //import database
+
 const jwt = require("jsonwebtoken");
+const db = require("../config/db");
 
-// GET
+// GET ALL
+const getPaintings = async (req, res) => {
+  try {
+    const result = await db.query(
+      "SELECT * FROM paintings WHERE user_id = $1",
+      [req.user.id],
+    );
 
-const getPaintings = (req, res, next) => {
-  db.query(
-    `SELECT * FROM paintings WHERE user_id = ?`,
-    [req.user.id],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({ message: "Internal server error" });
-      }
-
-      return res.status(200).json({ data: result });
-    },
-  );
+    return res.status(200).json({ data: result.rows });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
 
-const getPainting = (req, res, next) => {
+// GET ONE
+const getPainting = async (req, res) => {
   const id = req.params.id;
+
   if (!id) {
     return res.status(400).json({ message: "Please provide an ID" });
   }
-  db.query(
-    `
-        SELECT * FROM paintings WHERE id = ? AND user_id = ?`,
-    [id, req.user.id],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({ message: "Internal server error" });
-      }
-      return res.status(200).json({ data: result[0] });
-    },
-  );
+
+  try {
+    const result = await db.query(
+      "SELECT * FROM paintings WHERE id = $1 AND user_id = $2",
+      [id, req.user.id],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Painting doesn't exist" });
+    }
+
+    return res.status(200).json({ data: result.rows[0] });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
 
-//POST
-
-const createCanvas = (req, res, next) => {
+// CREATE
+const createCanvas = async (req, res) => {
   if (!req.body.image_data) {
     return res.status(400).json({ message: "No image data" });
   }
 
-  const imageData = req.body.image_data;
-  let title = req.body.title;
-  if (!title) {
-    title = "untitled";
+  const { image_data } = req.body;
+  const title = req.body.title || "untitled";
+
+  try {
+    const result = await db.query(
+      `INSERT INTO paintings(title, image_data, user_id)
+       VALUES($1, $2, $3)
+       RETURNING id`,
+      [title, image_data, req.user.id],
+    );
+
+    return res.status(201).json({
+      message: "Canvas Created Successfully",
+      paintingId: result.rows[0].id,
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
   }
-  db.query(
-    `INSERT INTO paintings(title,image_data,user_id) VALUES(?,?,?)`,
-    [title, imageData, req.user.id],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({ message: "Internal server error" });
-      }
-      const paintingId = result.insertId;
-      return res.status(201).json({
-        message: "Canvas Created Successfully",
-        paintingId: paintingId,
-      });
-    },
-  );
 };
 
-// PUT
+// UPDATE
+const updatePainting = async (req, res) => {
+  const id = req.params.id;
+  const { title, image_data } = req.body;
 
-const updatePainting = (req, res, next) => {
+  if (!id) {
+    return res.status(400).json({ message: "Please provide an ID" });
+  }
+
+  try {
+    const result = await db.query(
+      `UPDATE paintings
+       SET title = COALESCE($1, title),
+           image_data = COALESCE($2, image_data)
+       WHERE id = $3 AND user_id = $4`,
+      [title, image_data, id, req.user.id],
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Painting doesn't exist" });
+    }
+
+    return res.status(200).json({ message: "Painting updated successfully" });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// DELETE
+const deletePainting = async (req, res) => {
   const id = req.params.id;
 
   if (!id) {
     return res.status(400).json({ message: "Please provide an ID" });
   }
 
-  const { title, image_data } = req.body;
+  try {
+    const result = await db.query(
+      "DELETE FROM paintings WHERE id = $1 AND user_id = $2",
+      [id, req.user.id],
+    );
 
-  if (!title && !image_data) {
-    return res.status(400).json({ message: "Nothing to update" });
-  }
-
-  let query = "UPDATE paintings SET ";
-  let values = [];
-
-  if (title) {
-    query += "title = ?, ";
-    values.push(title);
-  }
-
-  if (image_data) {
-    query += "image_data = ?, ";
-    values.push(image_data);
-  }
-
-  // remove last comma
-  query = query.slice(0, -2);
-
-  query += " WHERE id = ? AND user_id = ?";
-  values.push(id, req.user.id);
-
-  db.query(query, values, (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: "Internal server error" });
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Painting not found" });
     }
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Painting doesn't exist" });
-    }
-
-    return res.status(200).json({ message: "Painting updated successfully" });
-  });
-};
-
-// DELETE
-
-const deletePainting = (req, res, next) => {
-  if (!req.params.id) {
-    return res.status(400).json({ message: "Please provide an ID" });
+    return res.status(200).json({ message: "Painting deleted successfully" });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
   }
-  const id = req.params.id;
-
-  db.query(
-    `DELETE FROM paintings WHERE id = ? AND user_id = ?`,
-    [id, req.user.id],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({ message: "Internal server error" });
-      }
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "Painting not found" });
-      }
-      return res.status(200).json({ message: "Painting deleted successfully" });
-    },
-  );
 };
 
 module.exports = {

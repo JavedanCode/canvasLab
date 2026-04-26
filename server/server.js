@@ -9,7 +9,8 @@ const db = require("./config/db"); //import database
 const app = express(); //create server
 
 app.use(cors()); //use cors middleware
-app.use(express.json()); //use json parser so backend can communicate with frontend
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(userRoutes);
 app.use(paintingRoutes);
 
@@ -19,13 +20,14 @@ app.get("/", (req, res) => {
 });
 
 // get request to test db
-app.get("/test-db", (req, res) => {
-  db.query("SELECT 1", (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: err });
-    }
-    res.json(result);
-  });
+app.get("/test-db", async (req, res) => {
+  try {
+    const result = await db.query("SELECT NOW()");
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json(err);
+  }
 });
 //set port from .env if that doesn't work then use 3000
 const PORT = process.env.PORT || 3000;
