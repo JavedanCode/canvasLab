@@ -15,18 +15,18 @@ const paintingRoutes = express.Router();
 
 paintingRoutes.get("/paintings", authMiddleware, getPaintings);
 
-paintingRoutes.get("/painting/:id", authMiddleware, getPainting);
+paintingRoutes.get("/paintings/:id", authMiddleware, getPainting);
 
 // POST
 
-paintingRoutes.post("/painting", authMiddleware, createCanvas);
+paintingRoutes.post("/paintings", authMiddleware, createCanvas);
 
 // PUT
 
-paintingRoutes.put("/painting/:id", authMiddleware, updatePainting);
+paintingRoutes.put("/paintings/:id", authMiddleware, updatePainting);
 
 // DELETE
 
-paintingRoutes.delete("/painting/:id", authMiddleware, deletePainting);
+paintingRoutes.delete("/paintings/:id", authMiddleware, deletePainting);
 
 module.exports = paintingRoutes;

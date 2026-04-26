@@ -48,10 +48,56 @@ export default function menu() {
       const title = document.createElement("p");
       title.textContent = painting.title;
 
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.classList.add("delete-btn");
+
+      deleteBtn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+
+        const confirmDelete = confirm("Delete this painting?");
+        if (!confirmDelete) return;
+
+        try {
+          const token = localStorage.getItem("token");
+
+          const response = await fetch(
+            `http://localhost:3000/paintings/${painting.id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            alert(data.message || "Delete failed");
+            return;
+          }
+
+          // 🔥 remove from UI
+          paintings = paintings.filter((p) => p.id !== painting.id);
+
+          renderCards(); // refresh UI
+        } catch (error) {
+          console.error(error);
+          alert("Server error");
+        }
+      });
+
       card.appendChild(title);
+      card.appendChild(deleteBtn);
 
       card.addEventListener("click", () => {
-        console.log("Open painting", index);
+        navigateTo(() =>
+          canvas({
+            id: painting.id,
+            title: painting.title,
+          }),
+        );
       });
 
       grid.appendChild(card);

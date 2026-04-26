@@ -98,8 +98,40 @@ export default function canvas({
     ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
   }
 
+  async function loadPainting() {
+    if (!id) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`http://localhost:3000/paintings/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(data);
+        return;
+      }
+
+      const image = new Image();
+      image.src = data.data.image_data;
+
+      image.onload = () => {
+        ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+        ctx.drawImage(image, 0, 0, canvasEl.width, canvasEl.height);
+      };
+    } catch (error) {
+      console.error("Failed to load painting:", error);
+    }
+  }
+
   requestAnimationFrame(() => {
     resizeCanvas();
+    loadPainting();
   });
   window.addEventListener("resize", resizeCanvas);
 
@@ -187,18 +219,64 @@ export default function canvas({
 
   saveBtn.addEventListener("click", async () => {
     const imageData = canvasEl.toDataURL("image/png");
-    const titleChanged = currentTitle !== originalTitle;
+    const token = localStorage.getItem("token");
 
-    const payload = {
-      id,
-      image: imageData,
-      ...(titleChanged && { title: currentTitle }),
-    };
+    try {
+      let response;
 
-    // I NEED REPLACE THIS WITH MY BACKEND CALL
-    console.log("SAVE PAYLOAD", payload);
+      // CREATE
+      if (!id) {
+        response = await fetch("http://localhost:3000/paintings", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: currentTitle,
+            image_data: imageData,
+          }),
+        });
 
-    originalTitle = currentTitle;
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.message || "Failed to save");
+          return;
+        }
+
+        id = data.paintingId;
+
+        alert("Painting created!");
+      }
+
+      // UPDATE
+      else {
+        response = await fetch(`http://localhost:3000/paintings/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: currentTitle,
+            image_data: imageData,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.message || "Update failed");
+          return;
+        }
+
+        alert("Painting updated!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Server error");
+    }
   });
 
   return appLayout(content, username);
