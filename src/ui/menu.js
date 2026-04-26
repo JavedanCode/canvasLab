@@ -11,6 +11,32 @@ export default function menu() {
 
   let paintings = [];
 
+  async function loadPaintings() {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch("http://localhost:3000/paintings", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(data);
+        return;
+      }
+
+      paintings = data.data; // 🔥 important
+      renderCards();
+    } catch (error) {
+      console.error("Failed to load paintings:", error);
+    }
+  }
+
   function renderCards() {
     grid.innerHTML = "";
 
@@ -41,14 +67,12 @@ export default function menu() {
       //     title: `Untitled ${paintings.length + 1}`,
       //   });
       navigateTo(canvas);
-
-      renderCards();
     });
 
     grid.appendChild(addCard);
   }
 
-  renderCards();
+  loadPaintings();
 
   content.appendChild(grid);
 

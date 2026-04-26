@@ -13,7 +13,7 @@ const paintingRoutes = express.Router();
 
 // GET
 
-paintingRoutes.get("/painting", authMiddleware, getPaintings);
+paintingRoutes.get("/paintings", authMiddleware, getPaintings);
 
 paintingRoutes.get("/painting/:id", authMiddleware, getPainting);
 

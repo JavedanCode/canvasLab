@@ -12,9 +12,7 @@ const getPaintings = (req, res, next) => {
       if (err) {
         return res.status(500).json({ message: "Internal server error" });
       }
-      if (result.length === 0) {
-        return res.status(404).json({ message: "Painting doesn't exist" });
-      }
+
       return res.status(200).json({ data: result });
     },
   );
@@ -32,9 +30,6 @@ const getPainting = (req, res, next) => {
     (err, result) => {
       if (err) {
         return res.status(500).json({ message: "Internal server error" });
-      }
-      if (result.length === 0) {
-        return res.status(404).json({ message: "Painting doesn't exist" });
       }
       return res.status(200).json({ data: result[0] });
     },
