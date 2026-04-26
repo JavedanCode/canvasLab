@@ -122,5 +122,8 @@ export default function menu() {
 
   content.appendChild(grid);
 
-  return appLayout(content, "Soren");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const username = user?.username || "Guest";
+
+  return appLayout(content, username);
 }

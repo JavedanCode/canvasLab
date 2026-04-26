@@ -65,7 +65,7 @@ const handleLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     db.query(
-      `SELECT id, email, password_hash FROM users where email = ?`,
+      `SELECT id,username, email, password_hash FROM users where email = ?`,
       [email],
       async (err, result) => {
         if (err) {
@@ -84,6 +84,7 @@ const handleLogin = async (req, res, next) => {
             user: {
               id: result[0].id,
               email: result[0].email,
+              username: result[0].username,
             },
           });
         } else {

@@ -2,11 +2,7 @@ import { navigateTo } from "../index.js";
 import appLayout from "./appLayout.js";
 import menu from "./menu.js";
 
-export default function canvas({
-  title = "Untitled",
-  username = "Soren",
-  id = null,
-} = {}) {
+export default function canvas({ title = "Untitled", id = null } = {}) {
   const content = document.createElement("div");
   content.classList.add("canvas-page");
 
@@ -278,6 +274,9 @@ export default function canvas({
       alert("Server error");
     }
   });
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const username = user?.username || "Guest";
 
   return appLayout(content, username);
 }

@@ -101,10 +101,8 @@ export default () => {
         return;
       }
 
-      // 🔑 store token
       localStorage.setItem("token", data.token);
 
-      // optional: store user
       localStorage.setItem("user", JSON.stringify(data.user));
 
       navigateTo(menu);
