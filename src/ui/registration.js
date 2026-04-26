@@ -63,7 +63,7 @@ export default () => {
   registrationForm.appendChild(passwordInput);
   registrationForm.appendChild(buttonContainer);
 
-  registrationForm.addEventListener("submit", (e) => {
+  registrationForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const username = usernameInput.value.trim();
@@ -91,8 +91,27 @@ export default () => {
       valid = false;
     }
 
-    if (valid) {
-      console.log("Signup OK");
+    if (!valid) return;
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        alert(data.message || "Signup failed");
+        return;
+      }
+      alert("Signup successful! You can now log in.");
+      loginBtn.click();
+    } catch (error) {
+      console.error(error);
+      alert("Server error");
     }
   });
 

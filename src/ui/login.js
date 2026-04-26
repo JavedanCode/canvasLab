@@ -62,7 +62,7 @@ export default () => {
   loginFormContainer.appendChild(loginHeading);
   loginFormContainer.appendChild(loginForm);
 
-  loginForm.addEventListener("submit", (e) => {
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const email = emailInput.value.trim();
@@ -83,8 +83,34 @@ export default () => {
       valid = false;
     }
 
-    if (valid) {
+    if (!valid) return;
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.message || "Login failed");
+        return;
+      }
+
+      // 🔑 store token
+      localStorage.setItem("token", data.token);
+
+      // optional: store user
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       navigateTo(menu);
+    } catch (error) {
+      console.error(error);
+      alert("Server error");
     }
   });
 
