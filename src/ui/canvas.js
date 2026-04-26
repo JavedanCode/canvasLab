@@ -60,6 +60,10 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
 
   tools.append(brushBtn, eraserBtn, clearBtn, colorInput, sizeInput);
 
+  const downloadBtn = document.createElement("button");
+  downloadBtn.classList.add("form-btn");
+  downloadBtn.textContent = "Download";
+
   const saveBtn = document.createElement("button");
   saveBtn.classList.add("form-btn");
   saveBtn.textContent = "Save";
@@ -69,7 +73,7 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
   backBtn.textContent = "Back";
   backBtn.addEventListener("click", () => navigateTo(menu));
 
-  topBar.append(titleEl, tools, saveBtn, backBtn);
+  topBar.append(titleEl, tools, saveBtn, downloadBtn, backBtn);
 
   const canvasEl = document.createElement("canvas");
   canvasEl.classList.add("paint-canvas");
@@ -273,6 +277,19 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
       console.error(error);
       alert("Server error");
     }
+  });
+
+  downloadBtn.addEventListener("click", () => {
+    const imageData = canvasEl.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.href = imageData;
+
+    // filename
+    const safeTitle = currentTitle.replace(/\s+/g, "_").toLowerCase();
+    link.download = `${safeTitle || "untitled"}.png`;
+
+    link.click();
   });
 
   const user = JSON.parse(localStorage.getItem("user"));
