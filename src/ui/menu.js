@@ -15,7 +15,7 @@ export default function menu() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("https://canvaslab.onrender.com/paintings", {
+      const response = await fetch("http://localhost:3000/paintings", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export default function menu() {
           const token = localStorage.getItem("token");
 
           const response = await fetch(
-            `https://canvaslab.onrender.com/paintings/${painting.id}`,
+            `http://localhost:3000/paintings/${painting.id}`,
             {
               method: "DELETE",
               headers: {

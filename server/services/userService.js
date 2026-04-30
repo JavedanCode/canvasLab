@@ -34,7 +34,7 @@ const removeUser = async (id) => {
 
 const loginUser = async (email, password) => {
   const result = await db.query(
-    `SELECT id , username, email, password-hash FROM users WHERE email = $1`,
+    `SELECT id , username, email, password_hash FROM users WHERE email = $1`,
     [email],
   );
 
