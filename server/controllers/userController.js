@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const db = require("../config/db"); //import database
+const db = require("../config/db");
 const jwt = require("jsonwebtoken");
 const { getAllUsers, getUserById, createUser, removeUser } = require("../services/userService");
 
