@@ -1,32 +1,29 @@
-# 🎨 CanvasLab
+# CanvasLab
 
-A full-stack web application that allows users to create, save, edit, and manage digital paintings directly in the browser.
-
-Built with a custom frontend canvas engine and a Node.js + PostgreSQL backend, CanvasLab supports authentication, persistent storage, and real-time interaction.
+CanvasLab is a full-stack web application that enables users to create, edit, store, and manage digital paintings directly in the browser. The system provides a RESTful API with authentication, persistent storage, and an interactive frontend built with the HTML5 Canvas API.
 
 ---
 
-## 🚀 Live Demo
+## Overview
 
-🔗 https://canvaslab.onrender.com
-
-> ⚠️ Note: The backend is hosted on Render (free tier), so the first request may take a few seconds due to cold start.
+The application is designed as a data-centric system demonstrating full CRUD functionality, secure user authentication, and structured API design. It follows a layered backend architecture and includes automated testing and API documentation.
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔐 User authentication (JWT-based)
-- 🎨 Interactive drawing canvas (brush, eraser, color picker, size control)
-- 💾 Save and update paintings
-- 🗂️ View all saved paintings per user
-- 🗑️ Delete paintings
-- 📥 Download artwork as image
-- ☁️ Persistent cloud storage (PostgreSQL)
+- User authentication using JSON Web Tokens (JWT)
+- Create, read, update, and delete digital paintings
+- Per-user data isolation
+- Interactive drawing canvas (brush, eraser, color tools)
+- Persistent storage using PostgreSQL
+- RESTful API with proper HTTP methods and status codes
+- Unit-tested business logic
+- Interactive API documentation via Swagger (OpenAPI)
 
 ---
 
-## 🧠 Tech Stack
+## Technology Stack
 
 ### Frontend
 
@@ -38,44 +35,120 @@ Built with a custom frontend canvas engine and a Node.js + PostgreSQL backend, C
 
 - Node.js
 - Express.js
-- PostgreSQL (hosted on Render)
-- JWT Authentication
+- PostgreSQL
+- JWT (authentication)
 - bcrypt (password hashing)
 
-### Deployment
+### Tooling
 
-- Backend: Render
-- Database: Render PostgreSQL
-- Frontend: (Add your hosting here if deployed)
+- Jest (unit testing)
+- Swagger (OpenAPI documentation)
+- Git & GitHub (version control)
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 canvasLab/
 │
-├── server/              # Backend (Node + Express)
-│   ├── controllers/
-│   ├── routes/
-│   ├── middleware/
-│   ├── config/
-│   └── server.js
+├── server/
+│   ├── controllers/     # HTTP layer (request/response handling)
+│   ├── services/        # Business logic (testable layer)
+│   ├── routes/          # API route definitions
+│   ├── middleware/      # Authentication middleware
+│   ├── config/          # Database and Swagger configuration
+│   ├── tests/           # Unit tests (Jest)
+│   └── server.js        # Application entry point
 │
-├── src/                 # Frontend
-│   ├── ui/
-│   ├── util/
-│   └── index.js
-│
+├── src/                 # Frontend logic
 ├── styles.css
 └── README.md
 ```
 
 ---
 
-## ⚙️ Environment Variables
+## API Documentation
 
-### Backend (.env)
+Interactive API documentation is available via Swagger UI:
+
+```
+http://localhost:3000/api-docs
+```
+
+This interface allows:
+
+- Exploring all endpoints
+- Sending real HTTP requests
+- Viewing request and response structures
+- Testing authentication-protected routes
+
+---
+
+## Authentication
+
+The API uses JWT-based authentication.
+
+### Flow
+
+1. User registers via `/auth/register`
+2. User logs in via `/auth/login`
+3. Server returns a JWT token
+4. Token must be included in subsequent requests:
+
+```
+Authorization: Bearer <token>
+```
+
+Protected routes require a valid token.
+
+---
+
+## Core API Endpoints
+
+### Authentication
+
+- `POST /auth/register` — Register a new user
+- `POST /auth/login` — Authenticate user and receive JWT
+
+### Users
+
+- `GET /users` — Retrieve all users (protected)
+- `GET /users/:id` — Retrieve a specific user (protected)
+- `DELETE /users/:id` — Delete a user (protected)
+
+### Paintings
+
+- `GET /paintings` — Retrieve all paintings for the authenticated user
+- `GET /paintings/:id` — Retrieve a specific painting
+- `POST /paintings` — Create a new painting
+- `PUT /paintings/:id` — Update an existing painting
+- `DELETE /paintings/:id` — Delete a painting
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
+```
+git clone https://github.com/JavedanCode/canvasLab.git
+cd canvasLab/server
+```
+
+---
+
+### 2. Install dependencies
+
+```
+npm install
+```
+
+---
+
+### 3. Configure environment variables
+
+Create a `.env` file inside `/server`:
 
 ```
 DATABASE_URL=your_postgres_connection_string
@@ -84,96 +157,74 @@ JWT_SECRET=your_secret_key
 
 ---
 
-## 🛠️ Installation (Local Development)
-
-### 1. Clone repo
-
-```
-git clone https://github.com/your-username/canvasLab.git
-cd canvasLab
-```
-
----
-
-### 2. Install backend dependencies
-
-```
-cd server
-npm install
-```
-
----
-
-### 3. Set up environment variables
-
-Create a `.env` file inside `/server`:
-
-```
-DATABASE_URL=your_local_or_remote_db
-JWT_SECRET=your_secret
-```
-
----
-
-### 4. Run backend
+### 4. Run the server
 
 ```
 npm run dev
 ```
 
----
+The server will start at:
 
-### 5. Run frontend
-
-Open `index.html` (or your dev setup)
-
----
-
-## 🔐 Authentication Flow
-
-- User registers → password hashed with bcrypt
-- User logs in → receives JWT token
-- Token stored in localStorage
-- Protected routes use middleware to verify token
-- `req.user` is attached from decoded token
+```
+http://localhost:3000
+```
 
 ---
 
-## 💡 Key Learning Highlights
+## Testing
 
-- Migrated from MySQL to PostgreSQL (cloud-ready)
-- Implemented JWT-based authentication system
-- Built custom REST API with protected routes
-- Managed large payloads (canvas image data)
-- Deployed full backend with environment variables and cloud DB
+Unit tests are implemented for all business logic using Jest.
+
+Run tests with:
+
+```
+npm test
+```
+
+Tests cover:
+
+- User service logic
+- Authentication logic
+- Painting service logic
+- Edge cases and failure scenarios
 
 ---
 
-## ⚠️ Known Limitations
+## Design Decisions
 
-- Images are stored as Base64 (not optimized for production scale)
-- No image compression yet
-- No pagination for paintings
-- Backend sleeps on inactivity (Render free tier)
+- **Service Layer Architecture**
+  Business logic is separated from controllers to ensure clean structure and testability.
+
+- **JWT Authentication**
+  Stateless authentication suitable for RESTful APIs.
+
+- **PostgreSQL**
+  Reliable relational database with structured querying.
+
+- **Swagger Integration**
+  Provides an explicit API contract and interactive testing interface.
 
 ---
 
-## 🚧 Future Improvements
+## Known Limitations
 
-- Upload images to cloud storage (Cloudinary / S3)
-- Add autosave functionality
-- Add thumbnails for faster loading
+- Image data is stored as Base64 (not optimized for large-scale systems)
+- No pagination for large datasets
+- No image compression implemented
+- Backend hosted on free tier may experience cold starts
+
+---
+
+## Future Improvements
+
+- Migrate image storage to cloud services (e.g., AWS S3, Cloudinary)
+- Implement pagination and filtering
+- Add image compression and optimization
 - Improve UI/UX
-- Add sharing / public gallery
+- Introduce public gallery or sharing features
 
 ---
 
-## 🙌 Acknowledgements
+## License
 
-Built as a learning project to understand full-stack development, authentication, and deployment workflows.
-
----
-
-## 📄 License
-
-This project is open-source and available under the MIT License.
+This project is licensed under the MIT License.
