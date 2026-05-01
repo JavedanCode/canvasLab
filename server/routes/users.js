@@ -79,6 +79,8 @@ userRoutes.get("/users/:id", authMiddleware, getUser);
  *         description: User created successfully
  *       400:
  *         description: Missing fields
+ *       409:
+ *         description: User already exists
  */
 userRoutes.post("/auth/register", registerUser);
 
@@ -130,6 +132,8 @@ userRoutes.post("/auth/login", handleLogin);
  *         description: User deleted
  *       404:
  *         description: User not found
+ *       403:
+ *         description: Forbidden - cannot delete another user
  */
 userRoutes.delete("/users/:id", authMiddleware, deleteUser);
 

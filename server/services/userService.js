@@ -15,14 +15,21 @@ const getUserById = async (id) => {
 const createUser = async (username, email, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const result = await db.query(
-    `INSERT INTO users(username, email, password_hash)
+  try {
+    const result = await db.query(
+      `INSERT INTO users(username, email, password_hash)
         VALUES($1, $2, $3)
         RETURNING id`,
-    [username, email, hashedPassword],
-  );
+      [username, email, hashedPassword],
+    );
+    return result.rows[0];
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new Error("USER_ALREADY_EXISTS");
+    }
 
-  return result.rows[0];
+    throw err;
+  }
 };
 
 const removeUser = async (id) => {
