@@ -51,11 +51,21 @@ const registerUser = async (req, res) => {
 
 // DELETE USER BY ID
 const deleteUser = async (req, res) => {
-  try {
-    const deleted = await removeUser(req.params.id);
+  const userIdFromToken = req.user.id;
+  const userIdFromParams = parseInt(req.params.id);
 
-    if (deleted === 0)
+  if (userIdFromToken !== userIdFromParams) {
+    return res.status(403).json({
+      message: "You are not allowed to delete this user",
+    });
+  }
+
+  try {
+    const deleted = await removeUser(userIdFromParams);
+
+    if (deleted === 0) {
       return res.status(404).json({ message: "User not found" });
+    }
 
     return res.status(200).json({ message: "User deleted successfully" });
   } catch {

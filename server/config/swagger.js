@@ -11,21 +11,27 @@ const options = {
     servers: [
       {
         url: "http://localhost:3000",
+      },
+      {
         url: "https://canvaslab.onrender.com",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
       },
     ],
   },
   apis: [__dirname + "/../routes/*.js"],
-  components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-      },
-    },
-  },
-  security: [{ bearerAuth: [] }],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
