@@ -109,11 +109,14 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`http://localhost:3000/paintings/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `https://canvaslab.onrender.com/paintings/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const data = await response.json();
 
@@ -231,7 +234,7 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
 
       // CREATE
       if (!id) {
-        response = await fetch("http://localhost:3000/paintings", {
+        response = await fetch("https://canvaslab.onrender.com/paintings", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -257,17 +260,20 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
 
       // UPDATE
       else {
-        response = await fetch(`http://localhost:3000/paintings/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        response = await fetch(
+          `https://canvaslab.onrender.com/paintings/${id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              title: currentTitle,
+              image_data: imageData,
+            }),
           },
-          body: JSON.stringify({
-            title: currentTitle,
-            image_data: imageData,
-          }),
-        });
+        );
 
         const data = await response.json();
 
