@@ -4,6 +4,9 @@ require("dotenv").config();
 const userRoutes = require("./routes/users.js");
 const paintingRoutes = require("./routes/paintings.js");
 
+//IMPORT COOKIE PARSER
+const cookieParser = require("cookie-parser");
+
 //SWAGGER UI IMPORT
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./config/swagger");
@@ -14,12 +17,25 @@ const db = require("./config/db");
 //CREATE SERVER
 const app = express();
 
-//MIDDLEWARE AND ROUTE USAGE AND SWAGGER
+// MIDDLEWARE
 app.use(cors());
+
 app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+
+app.use(
+  express.urlencoded({
+    limit: "10mb",
+    extended: true,
+  }),
+);
+
+app.use(cookieParser());
+
+// ROUTES
 app.use(userRoutes);
 app.use(paintingRoutes);
+
+// SWAGGER
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //simple get request to test server is running

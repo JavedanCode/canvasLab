@@ -89,9 +89,18 @@ const handleLogin = async (req, res, next) => {
   try {
     const result = await loginUser(email, password);
 
+    const { token, user } = result;
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 1000,
+    });
+
     return res.status(200).json({
       message: "Login successful",
-      ...result,
+      user,
     });
   } catch (error) {
     if (error.message === "INVALID_CREDENTIALS") {
