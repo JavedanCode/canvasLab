@@ -1,25 +1,67 @@
 # CanvasLab
 
-CanvasLab is a full-stack web application that enables users to create, edit, store, and manage digital paintings directly in the browser. The system provides a RESTful API with authentication, persistent storage, and an interactive frontend built with the HTML5 Canvas API.
+CanvasLab is a full-stack web application that enables users to create, edit, save, and manage digital paintings directly in the browser. The project demonstrates a complete client-server architecture with secure authentication, persistent storage, RESTful API design, automated testing, and interactive API documentation.
+
+The application combines an interactive HTML5 Canvas frontend with a Node.js and PostgreSQL backend following a layered service-based architecture.
 
 ---
 
 ## Overview
 
-The application is designed as a data-centric system demonstrating full CRUD functionality, secure user authentication, and structured API design. It follows a layered backend architecture and includes automated testing and API documentation.
+CanvasLab was developed as a systems analysis and full-stack engineering project focused on:
+
+- REST API design
+- Authentication and authorization
+- Layered backend architecture
+- Secure session handling
+- CRUD operations
+- Database integration
+- Automated testing
+- API documentation
+- Deployment workflows
+
+The backend architecture separates routing, controller logic, business logic, and middleware into dedicated layers to improve maintainability, scalability, and testability.
 
 ---
 
 ## Features
 
-- User authentication using JSON Web Tokens (JWT)
-- Create, read, update, and delete digital paintings
-- Per-user data isolation
-- Interactive drawing canvas (brush, eraser, color tools)
-- Persistent storage using PostgreSQL
-- RESTful API with proper HTTP methods and status codes
+### Authentication & Security
+
+- JWT-based authentication
+- HttpOnly cookie session management
+- Password hashing using bcrypt
+- Protected API routes via middleware
+- Per-user resource isolation
+- Authorization checks for protected actions
+- Secure cross-origin authentication with CORS
+
+### Painting Management
+
+- Create digital paintings
+- Retrieve saved paintings
+- Update existing paintings
+- Delete paintings
+- User-specific painting storage
+- Persistent PostgreSQL database storage
+
+### Frontend
+
+- Interactive HTML5 Canvas drawing system
+- Brush and eraser tools
+- Color picker
+- Adjustable brush size
+- Painting persistence and retrieval
+
+### Backend Engineering
+
+- RESTful API design
+- Service layer architecture
+- Modular route structure
+- Centralized middleware
+- Structured error handling
+- Swagger/OpenAPI integration
 - Unit-tested business logic
-- Interactive API documentation via Swagger (OpenAPI)
 
 ---
 
@@ -36,71 +78,120 @@ The application is designed as a data-centric system demonstrating full CRUD fun
 - Node.js
 - Express.js
 - PostgreSQL
-- JWT (authentication)
-- bcrypt (password hashing)
+- JWT Authentication
+- bcrypt
+- cookie-parser
 
-### Tooling
+### Tooling & Documentation
 
 - Jest (unit testing)
-- Swagger (OpenAPI documentation)
-- Git & GitHub (version control)
+- Swagger / OpenAPI
+- Git & GitHub
+- Render (deployment)
 
 ---
 
 ## Project Structure
 
-```
+```text
 canvasLab/
 │
 ├── server/
-│   ├── controllers/     # HTTP layer (request/response handling)
-│   ├── services/        # Business logic (testable layer)
-│   ├── routes/          # API route definitions
+│   ├── controllers/     # HTTP request/response handling
+│   ├── services/        # Business logic layer
+│   ├── routes/          # API endpoint definitions
 │   ├── middleware/      # Authentication middleware
 │   ├── config/          # Database and Swagger configuration
-│   ├── tests/           # Unit tests (Jest)
+│   ├── tests/           # Jest unit tests
 │   └── server.js        # Application entry point
 │
-├── src/                 # Frontend logic
+├── src/                 # Frontend application logic
 ├── styles.css
 └── README.md
 ```
 
 ---
 
-## API Documentation
+## Architecture
 
-Interactive API documentation is available via Swagger UI:
+The backend follows a layered architecture pattern:
 
-```
-http://localhost:3000/api-docs
-```
+### Routes Layer
 
-This interface allows:
+Defines API endpoints and maps requests to controllers.
 
-- Exploring all endpoints
-- Sending real HTTP requests
-- Viewing request and response structures
-- Testing authentication-protected routes
+### Controller Layer
+
+Handles:
+
+- request validation
+- HTTP responses
+- status codes
+- interaction with services
+
+### Service Layer
+
+Contains isolated business logic and database operations.  
+This separation improves:
+
+- maintainability
+- readability
+- unit testing capability
+
+### Middleware Layer
+
+Responsible for:
+
+- authentication
+- JWT verification
+- protected route access
+- session validation
 
 ---
 
-## Authentication
+## Authentication System
 
-The API uses JWT-based authentication.
+CanvasLab uses JWT authentication stored in secure HttpOnly cookies.
 
-### Flow
+### Authentication Flow
 
 1. User registers via `/auth/register`
 2. User logs in via `/auth/login`
-3. Server returns a JWT token
-4. Token must be included in subsequent requests:
+3. Server generates JWT token
+4. JWT is stored as an HttpOnly cookie
+5. Browser automatically sends cookie with authenticated requests
+6. Middleware validates JWT and attaches authenticated user data to requests
 
-```
-Authorization: Bearer <token>
+### Why HttpOnly Cookies?
+
+Using HttpOnly cookies improves security by preventing client-side JavaScript from directly accessing authentication tokens, reducing exposure to XSS-based token theft.
+
+---
+
+## API Documentation
+
+Interactive API documentation is available through Swagger UI.
+
+### Local Development
+
+```text
+http://localhost:3000/api-docs
 ```
 
-Protected routes require a valid token.
+### Production
+
+```text
+https://canvaslab.onrender.com/api-docs
+```
+
+Swagger documentation includes:
+
+- endpoint descriptions
+- request schemas
+- response schemas
+- authentication behavior
+- HTTP status codes
+- protected route documentation
 
 ---
 
@@ -108,64 +199,64 @@ Protected routes require a valid token.
 
 ### Authentication
 
-- `POST /auth/register` — Register a new user
-- `POST /auth/login` — Authenticate user and receive JWT
+| Method | Endpoint         | Description                                 |
+| ------ | ---------------- | ------------------------------------------- |
+| POST   | `/auth/register` | Register a new user                         |
+| POST   | `/auth/login`    | Authenticate user and create session cookie |
 
-### Users
-
-- `GET /users` — Retrieve all users (protected)
-- `GET /users/:id` — Retrieve a specific user (protected)
-- `DELETE /users/:id` — Delete a user (protected)
+---
 
 ### Paintings
 
-- `GET /paintings` — Retrieve all paintings for the authenticated user
-- `GET /paintings/:id` — Retrieve a specific painting
-- `POST /paintings` — Create a new painting
-- `PUT /paintings/:id` — Update an existing painting
-- `DELETE /paintings/:id` — Delete a painting
+| Method | Endpoint         | Description                             |
+| ------ | ---------------- | --------------------------------------- |
+| GET    | `/paintings`     | Retrieve authenticated user's paintings |
+| GET    | `/paintings/:id` | Retrieve specific painting              |
+| POST   | `/paintings`     | Create new painting                     |
+| PUT    | `/paintings/:id` | Update existing painting                |
+| DELETE | `/paintings/:id` | Delete painting                         |
 
 ---
 
 ## Installation
 
-### 1. Clone the repository
+### 1. Clone Repository
 
-```
+```bash
 git clone https://github.com/JavedanCode/canvasLab.git
 cd canvasLab/server
 ```
 
 ---
 
-### 2. Install dependencies
+### 2. Install Dependencies
 
-```
+```bash
 npm install
 ```
 
 ---
 
-### 3. Configure environment variables
+### 3. Configure Environment Variables
 
 Create a `.env` file inside `/server`:
 
-```
+```env
 DATABASE_URL=your_postgres_connection_string
 JWT_SECRET=your_secret_key
 ```
 
 ---
 
-### 4. Run the server
+### 4. Run Development Server
 
-```
+```bash
 npm run dev
 ```
 
-The server will start at:
+Server will start at:
 
-```
+```text
 http://localhost:3000
 ```
 
@@ -173,55 +264,118 @@ http://localhost:3000
 
 ## Testing
 
-Unit tests are implemented for all business logic using Jest.
+Business logic is unit tested using Jest.
 
-Run tests with:
+### Run Tests
 
-```
+```bash
 npm test
 ```
 
-Tests cover:
+### Test Coverage Includes
 
 - User service logic
 - Authentication logic
 - Painting service logic
-- Edge cases and failure scenarios
+- CRUD operations
+- Error handling
+- Edge cases
+- Authorization scenarios
+
+---
+
+## Deployment
+
+### Backend
+
+- Hosted on Render
+- PostgreSQL database hosted on Render
+
+### Frontend
+
+- Hosted on GitHub Pages
 
 ---
 
 ## Design Decisions
 
-- **Service Layer Architecture**
-  Business logic is separated from controllers to ensure clean structure and testability.
+### Service Layer Architecture
 
-- **JWT Authentication**
-  Stateless authentication suitable for RESTful APIs.
+Business logic is separated from controllers to:
 
-- **PostgreSQL**
-  Reliable relational database with structured querying.
+- improve maintainability
+- simplify testing
+- reduce controller complexity
+- isolate database operations
 
-- **Swagger Integration**
-  Provides an explicit API contract and interactive testing interface.
+---
+
+### JWT + HttpOnly Cookies
+
+JWT authentication combined with HttpOnly cookies provides:
+
+- stateless authentication
+- secure browser-managed sessions
+- protection against token theft via JavaScript
+
+---
+
+### PostgreSQL
+
+PostgreSQL was selected for:
+
+- relational data modeling
+- reliability
+- structured querying
+- scalability
+
+---
+
+### Swagger Integration
+
+Swagger/OpenAPI provides:
+
+- interactive API testing
+- formal API documentation
+- improved developer experience
+- clearer backend contracts
+
+---
+
+## Security Considerations
+
+The project includes several security-focused improvements:
+
+- Password hashing with bcrypt
+- Protected route middleware
+- User-specific resource access
+- Authorization validation
+- Secure cookie-based authentication
+- Removal of unrestricted user listing endpoints
+- Proper HTTP status code handling
 
 ---
 
 ## Known Limitations
 
-- Image data is stored as Base64 (not optimized for large-scale systems)
-- No pagination for large datasets
+- Image data is stored as Base64
 - No image compression implemented
-- Backend hosted on free tier may experience cold starts
+- No pagination for large datasets
+- Free-tier backend deployment may experience cold starts
+- Paintings are stored directly in the database rather than object storage
 
 ---
 
 ## Future Improvements
 
-- Migrate image storage to cloud services (e.g., AWS S3, Cloudinary)
-- Implement pagination and filtering
-- Add image compression and optimization
-- Improve UI/UX
-- Introduce public gallery or sharing features
+- Cloud image storage integration (AWS S3 / Cloudinary)
+- Image compression and optimization
+- Public gallery functionality
+- Pagination and filtering
+- Role-based authorization
+- Refresh token implementation
+- Improved frontend UI/UX
+- Real-time collaboration features
 
 ---
 
