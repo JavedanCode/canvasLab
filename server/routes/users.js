@@ -11,33 +11,6 @@ const {
 
 const userRoutes = express.Router();
 
-//GET
-/**
- * @swagger
- * /users/{id}:
- *   get:
- *     summary: Get user by ID
- *     description: |
- *       Requires authenticated session cookie.
- *     tags: [Users]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: User found
- *       401:
- *         description: Unauthorized - no valid session cookie
- *       403:
- *         description: Invalid or expired token
- *       404:
- *         description: User not found
- */
-userRoutes.get("/users/:id", authMiddleware, getUser);
-
 // POST
 /**
  * @swagger

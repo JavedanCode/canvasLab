@@ -1,33 +1,9 @@
 const {
-  getAllUsers,
   getUserById,
   createUser,
   removeUser,
   loginUser,
 } = require("../services/userService");
-
-// GET ALL USERS
-const getUsers = async (req, res) => {
-  try {
-    const users = await getAllUsers();
-    return res.status(200).json({ data: users });
-  } catch {
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-// GET USER BY ID
-const getUser = async (req, res) => {
-  try {
-    const user = await getUserById(req.params.id);
-
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    return res.status(200).json({ data: user });
-  } catch {
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
 
 // CREATE USER (POST)
 const registerUser = async (req, res) => {
@@ -111,4 +87,4 @@ const handleLogin = async (req, res, next) => {
   }
 };
 
-module.exports = { getUsers, getUser, registerUser, deleteUser, handleLogin };
+module.exports = { registerUser, deleteUser, handleLogin };
