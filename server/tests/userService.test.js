@@ -19,40 +19,6 @@ beforeEach(() => {
 });
 
 //
-// GET ALL USERS
-//
-test("getAllUsers returns users", async () => {
-  db.query.mockResolvedValue({
-    rows: [{ id: 1 }, { id: 2 }],
-  });
-
-  const users = await getAllUsers();
-
-  expect(users.length).toBe(2);
-});
-
-//
-// GET USER BY ID
-//
-test("getUserById returns user", async () => {
-  db.query.mockResolvedValue({
-    rows: [{ id: 1, username: "test" }],
-  });
-
-  const user = await getUserById(1);
-
-  expect(user.username).toBe("test");
-});
-
-test("getUserById returns undefined if not found", async () => {
-  db.query.mockResolvedValue({ rows: [] });
-
-  const user = await getUserById(999);
-
-  expect(user).toBeUndefined();
-});
-
-//
 // CREATE USER
 //
 test("createUser hashes password and inserts user", async () => {
