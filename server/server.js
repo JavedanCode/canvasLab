@@ -20,7 +20,7 @@ const app = express();
 // MIDDLEWARE
 app.use(
   cors({
-    origin: "https://javedancode.github.io/canvasLab/",
+    origin: "https://javedancode.github.io",
     credentials: true,
   }),
 );
