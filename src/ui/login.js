@@ -93,6 +93,7 @@ export default () => {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ email, password }),
         },
       );
@@ -103,8 +104,6 @@ export default () => {
         alert(data.message || "Login failed");
         return;
       }
-
-      localStorage.setItem("token", data.token);
 
       localStorage.setItem("user", JSON.stringify(data.user));
 

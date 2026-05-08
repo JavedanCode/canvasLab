@@ -107,14 +107,13 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
     if (!id) return;
 
     try {
-      const token = localStorage.getItem("token");
-
       const response = await fetch(
         `https://canvaslab.onrender.com/paintings/${id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
+          credentials: "include",
         },
       );
 
@@ -238,8 +237,8 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
           body: JSON.stringify({
             title: currentTitle,
             image_data: imageData,
@@ -266,8 +265,8 @@ export default function canvas({ title = "Untitled", id = null } = {}) {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
+            credentials: "include",
             body: JSON.stringify({
               title: currentTitle,
               image_data: imageData,

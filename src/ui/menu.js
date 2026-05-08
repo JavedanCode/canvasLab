@@ -13,14 +13,12 @@ export default function menu() {
 
   async function loadPaintings() {
     try {
-      const token = localStorage.getItem("token");
-
       const response = await fetch("https://canvaslab.onrender.com/paintings", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -30,7 +28,7 @@ export default function menu() {
         return;
       }
 
-      paintings = data.data; // 🔥 important
+      paintings = data.data;
       renderCards();
     } catch (error) {
       console.error("Failed to load paintings:", error);
@@ -59,15 +57,11 @@ export default function menu() {
         if (!confirmDelete) return;
 
         try {
-          const token = localStorage.getItem("token");
-
           const response = await fetch(
             `https://canvaslab.onrender.com/paintings/${painting.id}`,
             {
               method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+              credentials: "include",
             },
           );
 
@@ -78,10 +72,9 @@ export default function menu() {
             return;
           }
 
-          // 🔥 remove from UI
           paintings = paintings.filter((p) => p.id !== painting.id);
 
-          renderCards(); // refresh UI
+          renderCards();
         } catch (error) {
           console.error(error);
           alert("Server error");
