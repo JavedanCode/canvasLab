@@ -11,31 +11,15 @@ const {
 
 const userRoutes = express.Router();
 
-// GET
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get all users
- *     tags: [Users]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of users
- *       401:
- *         description: Unauthorized
- */
-userRoutes.get("/users", authMiddleware, getUsers);
-
+//GET
 /**
  * @swagger
  * /users/{id}:
  *   get:
  *     summary: Get user by ID
+ *     description: |
+ *       Requires authenticated session cookie.
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -45,6 +29,10 @@ userRoutes.get("/users", authMiddleware, getUsers);
  *     responses:
  *       200:
  *         description: User found
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid or expired token
  *       404:
  *         description: User not found
  */
@@ -89,6 +77,9 @@ userRoutes.post("/auth/register", registerUser);
  * /auth/login:
  *   post:
  *     summary: Login user
+ *     description: |
+ *       Authenticates the user and creates an HttpOnly JWT cookie.
+ *       The browser automatically stores and sends the cookie for future authenticated requests.
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -118,9 +109,9 @@ userRoutes.post("/auth/login", handleLogin);
  * /users/{id}:
  *   delete:
  *     summary: Delete a user
+ *     description: |
+ *       Requires authenticated session cookie.
  *     tags: [Users]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -130,10 +121,12 @@ userRoutes.post("/auth/login", handleLogin);
  *     responses:
  *       200:
  *         description: User deleted
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid token or forbidden action
  *       404:
  *         description: User not found
- *       403:
- *         description: Forbidden - cannot delete another user
  */
 userRoutes.delete("/users/:id", authMiddleware, deleteUser);
 

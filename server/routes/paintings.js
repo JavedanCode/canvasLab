@@ -17,12 +17,16 @@ const paintingRoutes = express.Router();
  * /paintings:
  *   get:
  *     summary: Get all paintings for the logged-in user
+ *     description: |
+ *       Requires authenticated session cookie.
  *     tags: [Paintings]
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: List of paintings
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid or expired token
  */
 paintingRoutes.get("/paintings", authMiddleware, getPaintings);
 
@@ -31,9 +35,9 @@ paintingRoutes.get("/paintings", authMiddleware, getPaintings);
  * /paintings/{id}:
  *   get:
  *     summary: Get a painting by ID
+ *     description: |
+ *       Requires authenticated session cookie.
  *     tags: [Paintings]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -45,6 +49,11 @@ paintingRoutes.get("/paintings", authMiddleware, getPaintings);
  *         description: Painting found
  *       404:
  *         description: Not found
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid or expired token
+ *
  */
 paintingRoutes.get("/paintings/:id", authMiddleware, getPainting);
 
@@ -54,9 +63,9 @@ paintingRoutes.get("/paintings/:id", authMiddleware, getPainting);
  * /paintings:
  *   post:
  *     summary: Create a new painting
+ *     description: |
+ *       Requires authenticated session cookie.
  *     tags: [Paintings]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -74,6 +83,10 @@ paintingRoutes.get("/paintings/:id", authMiddleware, getPainting);
  *     responses:
  *       201:
  *         description: Painting created
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid or expired token
  */
 paintingRoutes.post("/paintings", authMiddleware, createCanvas);
 
@@ -83,9 +96,9 @@ paintingRoutes.post("/paintings", authMiddleware, createCanvas);
  * /paintings/{id}:
  *   put:
  *     summary: Update a painting
+ *     description: |
+ *       Requires authenticated session cookie.
  *     tags: [Paintings]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -105,6 +118,10 @@ paintingRoutes.post("/paintings", authMiddleware, createCanvas);
  *     responses:
  *       200:
  *         description: Updated
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid or expired token
  */
 paintingRoutes.put("/paintings/:id", authMiddleware, updatePainting);
 
@@ -114,9 +131,9 @@ paintingRoutes.put("/paintings/:id", authMiddleware, updatePainting);
  * /paintings/{id}:
  *   delete:
  *     summary: Delete a painting
+ *     description: |
+ *       Requires authenticated session cookie.
  *     tags: [Paintings]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -126,6 +143,10 @@ paintingRoutes.put("/paintings/:id", authMiddleware, updatePainting);
  *     responses:
  *       200:
  *         description: Deleted
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid or expired token
  */
 paintingRoutes.delete("/paintings/:id", authMiddleware, deletePainting);
 
