@@ -107,7 +107,9 @@ export default () => {
 
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      navigateTo(menu);
+      setTimeout(() => {
+        navigateTo(menu);
+      }, 1000);
     } catch (error) {
       console.error(error);
       alert("Server error");
