@@ -6,6 +6,7 @@ const {
   handleLogin,
   deleteUser,
   getCurrentUser,
+  logoutUser,
 } = require("../controllers/userController");
 
 const userRoutes = express.Router();
@@ -77,6 +78,8 @@ userRoutes.post("/auth/register", registerUser);
  *         description: Invalid credentials
  */
 userRoutes.post("/auth/login", handleLogin);
+
+userRoutes.post("/auth/logout", logoutUser);
 
 // DELETE
 /**

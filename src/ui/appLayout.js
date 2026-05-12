@@ -12,9 +12,37 @@ export default function appLayout(content, username = "User") {
   logo.src = canvasLab;
   logo.classList.add("header-logo");
 
+  const userContainer = document.createElement("div");
+  userContainer.classList.add("header-user-container");
+
   const user = document.createElement("div");
   user.classList.add("header-user");
   user.textContent = username;
+
+  const logoutBtn = document.createElement("button");
+  logoutBtn.textContent = "Logout";
+  logoutBtn.classList.add("logout-btn");
+
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      await fetch("https://canvaslab.onrender.com/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      localStorage.removeItem("user");
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  userContainer.appendChild(user);
+  userContainer.appendChild(logoutBtn);
+
+  header.appendChild(logo);
+  header.appendChild(userContainer);
 
   header.appendChild(logo);
   header.appendChild(user);

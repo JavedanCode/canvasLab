@@ -112,4 +112,22 @@ const handleLogin = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, deleteUser, handleLogin, getCurrentUser };
+const logoutUser = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: none,
+  });
+
+  return res.status(200).json({
+    message: "logout successful",
+  });
+};
+
+module.exports = {
+  registerUser,
+  deleteUser,
+  handleLogin,
+  getCurrentUser,
+  logoutUser,
+};
