@@ -25,14 +25,23 @@ export default function appLayout(content, username = "User") {
 
   logoutBtn.addEventListener("click", async () => {
     try {
-      await fetch("https://canvaslab.onrender.com/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://canvaslab.onrender.com/auth/logout",
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
+
+      const data = await response.json();
+
+      console.log(data);
 
       localStorage.removeItem("user");
 
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error) {
       console.error(error);
     }
