@@ -12,6 +12,23 @@ const {
 const userRoutes = express.Router();
 
 // GET
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Get current authenticated user
+ *     description: |
+ *       Validates the session cookie and returns the currently authenticated user.
+ *       Requires a valid HttpOnly JWT cookie.
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Current authenticated user returned successfully
+ *       401:
+ *         description: Unauthorized - no valid session cookie
+ *       403:
+ *         description: Invalid or expired token
+ */
 userRoutes.get("/auth/me", authMiddleware, getCurrentUser);
 
 // POST
@@ -54,8 +71,8 @@ userRoutes.post("/auth/register", registerUser);
  *   post:
  *     summary: Login user
  *     description: |
- *       Authenticates the user and creates an HttpOnly JWT cookie.
- *       The browser automatically stores and sends the cookie for future authenticated requests.
+ *       Authenticates the user and creates a secure HttpOnly JWT session cookie.
+ *       The browser automatically stores and sends the cookie with authenticated requests.
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -79,6 +96,18 @@ userRoutes.post("/auth/register", registerUser);
  */
 userRoutes.post("/auth/login", handleLogin);
 
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Logout current user
+ *     description: |
+ *       Clears the HttpOnly authentication cookie and ends the current session.
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
 userRoutes.post("/auth/logout", logoutUser);
 
 // DELETE
