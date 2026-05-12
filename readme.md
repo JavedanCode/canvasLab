@@ -183,7 +183,7 @@ http://localhost:3000/api-docs
 ```text
 https://canvaslab.onrender.com/api-docs
 ```
-
+---
 Swagger documentation includes:
 
 - endpoint descriptions
@@ -192,6 +192,7 @@ Swagger documentation includes:
 - authentication behavior
 - HTTP status codes
 - protected route documentation
+- session-based authentication flow
 
 ---
 
@@ -199,22 +200,49 @@ Swagger documentation includes:
 
 ### Authentication
 
-| Method | Endpoint         | Description                                 |
-| ------ | ---------------- | ------------------------------------------- |
-| POST   | `/auth/register` | Register a new user                         |
-| POST   | `/auth/login`    | Authenticate user and create session cookie |
+| Method | Endpoint         | Description                                                |
+| ------ | ---------------- | ---------------------------------------------------------- |
+| POST   | `/auth/register` | Register a new user                                        |
+| POST   | `/auth/login`    | Authenticate user and create secure HttpOnly session cookie |
+| GET    | `/auth/me`       | Retrieve currently authenticated user                      |
+| POST   | `/auth/logout`   | Logout user and clear authentication cookie                |
+
+---
+
+### Users
+
+| Method | Endpoint      | Description                    |
+| ------ | ------------- | ------------------------------ |
+| DELETE | `/users/:id`  | Delete authenticated user      |
 
 ---
 
 ### Paintings
 
-| Method | Endpoint         | Description                             |
-| ------ | ---------------- | --------------------------------------- |
-| GET    | `/paintings`     | Retrieve authenticated user's paintings |
-| GET    | `/paintings/:id` | Retrieve specific painting              |
-| POST   | `/paintings`     | Create new painting                     |
-| PUT    | `/paintings/:id` | Update existing painting                |
-| DELETE | `/paintings/:id` | Delete painting                         |
+| Method | Endpoint            | Description                                         |
+| ------ | ------------------- | --------------------------------------------------- |
+| GET    | `/paintings`        | Retrieve all paintings for authenticated user       |
+| GET    | `/paintings/:id`    | Retrieve a specific painting                        |
+| POST   | `/paintings`        | Create a new painting                               |
+| PUT    | `/paintings/:id`    | Update an existing painting                         |
+| DELETE | `/paintings/:id`    | Delete a painting                                   |
+
+---
+
+## Authentication
+
+CanvasLab uses secure session-based authentication with JWT stored inside HttpOnly cookies.
+
+### Authentication Flow
+
+1. User registers via `/auth/register`
+2. User logs in via `/auth/login`
+3. Server creates a secure HttpOnly JWT cookie
+4. Browser automatically includes cookie in authenticated requests
+5. Frontend restores user session through `/auth/me`
+6. User logs out via `/auth/logout`
+
+Protected routes require a valid authenticated session cookie.
 
 ---
 
