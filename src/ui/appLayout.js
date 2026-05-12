@@ -53,9 +53,6 @@ export default function appLayout(content, username = "User") {
   header.appendChild(logo);
   header.appendChild(userContainer);
 
-  header.appendChild(logo);
-  header.appendChild(user);
-
   const main = document.createElement("main");
   main.classList.add("app-main");
   main.appendChild(content);
