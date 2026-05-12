@@ -2,7 +2,33 @@ const {
   createUser,
   removeUser,
   loginUser,
+  getUserById,
 } = require("../services/userService");
+
+// GET CURRENT USER
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await getUserById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
 
 // CREATE USER (POST)
 const registerUser = async (req, res) => {
@@ -54,7 +80,7 @@ const deleteUser = async (req, res) => {
 };
 
 // HANDLE LOGIN (POST)
-const handleLogin = async (req, res, next) => {
+const handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -86,4 +112,4 @@ const handleLogin = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, deleteUser, handleLogin };
+module.exports = { registerUser, deleteUser, handleLogin, getCurrentUser };

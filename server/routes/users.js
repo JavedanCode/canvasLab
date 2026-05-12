@@ -2,14 +2,16 @@ const express = require("express");
 const authMiddleware = require("../middleware/authMiddleware.js");
 
 const {
-  getUsers,
-  getUser,
   registerUser,
   handleLogin,
   deleteUser,
+  getCurrentUser,
 } = require("../controllers/userController");
 
 const userRoutes = express.Router();
+
+// GET
+userRoutes.get("/auth/me", authMiddleware, getCurrentUser);
 
 // POST
 /**

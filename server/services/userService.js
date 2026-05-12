@@ -2,6 +2,11 @@ const db = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const getUserById = async (id) => {
+  const result = await db.query("SELECT * FROM users WHERE id = $1", [id]);
+  return result.rows[0];
+};
+
 const createUser = async (username, email, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -65,4 +70,5 @@ module.exports = {
   createUser,
   removeUser,
   loginUser,
+  getUserById,
 };
